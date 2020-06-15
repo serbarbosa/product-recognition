@@ -12,10 +12,10 @@ The goal of this project is to recognise supermarket products in images or, more
 The images were provided by the gryfo company.  
 Each image contains a close up of a single product in a specic orientation. That way each product can be represented by a set of images showing different faces and rotatios. See the example below for a cherry gelatin.
 <p float="left">
-  <img src="source/sample_product/1.jpg" width='250'>
-  <img src="source/sample_product/3.jpg" width='250'>
-  <img src="source/sample_product/5.jpg" width='250'>
-  <img src="source/sample_product/6.jpg" width='250'>
+  <img src="source/sample_product/1.jpg" width='220'>
+  <img src="source/sample_product/3.jpg" width='220'>
+  <img src="source/sample_product/5.jpg" width='220'>
+  <img src="source/sample_product/6.jpg" width='220'>
 </p>
 </br> 
 
@@ -45,8 +45,8 @@ It has to be taken into account that the different rotations and scales in the i
 ---------
 A Brute Force method was used to compare the different images of the product and match the 30 most similar features. Notice that the greater the transformation of the image, the greater the number of wrong matches.
 <p float="left">
-  <img src="source/partial_examples/1_and_2.jpg" width='250'>
-  <img src="source/partial_examples/3_and_4.jpg" width='250'>
-  <img src="source/partial_examples/5_and_6.jpg" width='250'>
-  <img src="source/partial_examples/3_and_7.jpg" width='250'>
+  <img src="source/partial_examples/1_and_2.jpg" width='600'>
+  <img src="source/partial_examples/3_and_4.jpg" width='600'>
+  <img src="source/partial_examples/5_and_6.jpg" width='600'>
+  <img src="source/partial_examples/3_and_7.jpg" width='600'>
 </p>
