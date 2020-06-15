@@ -9,7 +9,7 @@ The goal of this project is to recognise supermarket products in images or, more
 </br> 
 ### Input Images
 ---------
-The images were provided the gryfo company.  
+The images were provided by the gryfo company.  
 Each image contains a close up of a single product in a specic orientation. That way each product can be represented by a set of images showing different faces and rotatios. See the example below for a cherry gelatin.
 <p float="left">
   <img src="source/sample_product/1.jpg" width='250'>
