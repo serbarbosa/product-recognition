@@ -18,6 +18,7 @@ Each image contains a close up of a single product in a specic orientation. That
   <img src="source/sample_product/6.jpg" width='250'>
 </p>
 </br> 
+
 ### Steps
 ---------
 As a first attempt to achieve the goal is going to be used a computer vision approach for feature descriptions extraction.  
@@ -39,6 +40,7 @@ To perform the feature extraction step the ORB algorithm was chosen as it has pr
 For the next steps it will be necessary to decide which ML or computer vision method to use to retrive the product name for a given input image.
 It has to be taken into account that the different rotations and scales in the images can be hard to deal with so changes may be needed in the approach used so far.
 </br>
+
 ### First Results
 ---------
 A Brute Force method was used to compare the different images of the product and match the 30 most similar features. Notice that the greater the transformation of the image, the greater the number of wrong matches.
