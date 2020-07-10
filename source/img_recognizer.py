@@ -14,10 +14,16 @@ def recognize(query_img_path, img_feats_hist, numb_of_features, kmeans_model, n_
         numb_of_features : max ammount of features to extract
         kmeans_model : the kmeans model for the training set
         n_dic : number of clusters used in kmeans
+
+        return : string - 'SUCCESS', 'FAILURE' or 'ERROR' in the recognizing task
     '''
+
 
     # extracting img data to compare
     query_img_feats = _preprocess_and_extract(query_img_path, numb_of_features)
+    if query_img_feats[1] == 0: # no features were found
+        return 'ERROR'
+
     y = kmeans_model.predict(query_img_feats[0].astype(np.float32))
     query_img_hist, _ = np.histogram(y, bins=range(n_dic+1), density=True)
 
@@ -34,6 +40,17 @@ def recognize(query_img_path, img_feats_hist, numb_of_features, kmeans_model, n_
     # find nearest img
     nearest_path = min(dists, key = lambda x: x[0])
 
+    #get product code
+    prod_code = nearest_path[1].split(os.sep)[-2]
+
+    #get query product code
+    q_prod_code = query_img_path.split(os.sep)[-2]
+
+    # returns True if the producs are the same
+    if prod_code == q_prod_code:
+        return 'SUCCESS'
+    else:
+        return 'FAILURE'
 
     #dists.sort(key = lambda x: x[0])
     #nearest_path = dists[:7]

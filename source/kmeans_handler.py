@@ -9,8 +9,62 @@ import os, shutil
 import numpy as np
 import cv2
 from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from scipy.cluster.vq import kmeans, vq
 from joblib import Parallel, delayed
+import joblib
 import pickle
+
+def create_model_v2(descriptors_list, train_classes, n_dic, save_load=True, overwrite=True):
+
+    if save_load and not overwrite:
+            # will check if there are files to load data from
+            if os.path.exists("bovw.pkl"):
+                return load_model_v2()
+
+    descriptors = np.squeeze(np.array(descriptors_list)[:,[0]])
+
+    bag = np.concatenate(tuple(descriptors[i] for i in range(len(descriptors))), axis=0).astype(np.float32)
+
+    voc, variance = kmeans(bag, n_dic, 1)
+    print("kmeans distortion: " + str(variance))
+
+    # computing histogram od features
+    im_features = np.zeros((len(descriptors_list), n_dic), "float32")
+    for i in range(len(descriptors_list)):
+        words, distance = vq( descriptors_list[i][0],voc )
+        for w in words:
+            im_features[i][w] += 1
+
+
+    # computing tf-idf
+    nb_occurences = np.sum( (im_features > 0) * 1, axis = 0 )
+    idf = np.array(np.log((1.0*len(descriptors_list)+1) / (1.0*nb_occurences + 1)), "float32")
+
+    #normalizing features
+    stdScaler = StandardScaler().fit(im_features)
+    im_features = stdScaler.transform(im_features)
+
+    #train model using linear svm
+    #from sklearn.svm import LinearSVC
+    #print("performing Linear SVM")
+    #clf = LinearSVC(max_iter=20000)
+    #clf.fit(im_features, np.array(train_classes))
+
+    #train model using random forest algorithm
+    from sklearn.ensemble import RandomForestClassifier
+    print("performing random forest")
+    clf = RandomForestClassifier(n_estimators = 500, random_state=10)
+
+
+    clf.fit(im_features, np.array(train_classes)) #TODO create vector with product classes -> for validation as well
+
+
+    if save_load:
+        save_model_v2(clf, stdScaler, n_dic, voc)
+
+    return clf, stdScaler, n_dic, voc
+
 
 def create_model(descriptors_list, n_dic, random_state, save_load=True, overwrite=True):
     '''
@@ -20,7 +74,6 @@ def create_model(descriptors_list, n_dic, random_state, save_load=True, overwrit
         save_load        : choose to save or load(when exists) the created model
         overwrite        : will run the funcion and overwrite preexisting data files
     '''
-
     if save_load and not overwrite:
         # will check if there are files to load data from
         if os.path.exists("dictionary.pkl") and os.path.exists("kmeans_model.pkl"):
@@ -45,6 +98,7 @@ def create_model(descriptors_list, n_dic, random_state, save_load=True, overwrit
     #computing frequency of features in each image
     img_feats_hist = []
 
+
     for entry in descriptors_list:
         y = kmeans_model.predict(entry[0].astype(np.float32))
 
@@ -58,6 +112,9 @@ def create_model(descriptors_list, n_dic, random_state, save_load=True, overwrit
 
     return img_feats_hist, kmeans_model
 
+def save_model_v2(clf, stdScaler, n_dic, voc):
+    joblib.dump((clf, stdScaler, n_dic, voc), "bovw.pkl", compress=3)
+
 def save_model(img_feats_hist, kmeans_model):
     pickle.dump(img_feats_hist, open("dictionary.pkl", "wb"))
     pickle.dump(kmeans_model, open("kmeans_model.pkl", "wb"))
@@ -65,4 +122,5 @@ def save_model(img_feats_hist, kmeans_model):
 def load_model():
    return pickle.load(open("dictionary.pkl", "rb")), pickle.load(open("kmeans_model.pkl", "rb"))
 
-
+def loat_model_v2():
+    return joblib.load("bovw.pkl")

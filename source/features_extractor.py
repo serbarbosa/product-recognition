@@ -39,6 +39,7 @@ def extract_features(base_path, numb_of_features, save_load=True, overwrite=True
     '''
 
     descriptors_list = []
+    imgs_classes = []
     run = True
     if save_load and not overwrite:
         # will see if there is a file with the features to load from
@@ -50,28 +51,29 @@ def extract_features(base_path, numb_of_features, save_load=True, overwrite=True
 
         # listing products images paths
         products_paths = os.listdir(base_path)
-        numb_of_features = 1000 # bom com 200
 
+
+        imgs_paths = []
         for product_path in products_paths:
+            product_imgs = os.listdir(os.path.join(base_path, product_path))
+            for img_path in product_imgs:
+                imgs_paths.append(os.path.join(base_path, product_path, img_path))
 
-            # preprocessing and extracting images features from training base
-            images_paths = os.listdir(os.path.join(base_path, product_path))
-            prod_descs = Parallel(n_jobs=-1)(delayed(_preprocess_and_extract)(
-                                            os.path.join(base_path,product_path,img_path),
-                                            numb_of_features)
-                                            for img_path in images_paths
-                                            )
-            valid_descs = []
-            for desc in prod_descs:
-                if desc[1] != 0:
-                    valid_descs.append(desc)
-            descriptors_list += valid_descs
+        prod_descs = Parallel(n_jobs=-1)(delayed(_preprocess_and_extract)(
+                                        img_path, numb_of_features) for img_path in imgs_paths)
+
+        valid_descs = []
+        for desc in prod_descs:
+            if desc[1] != 0:
+                descriptors_list.append(desc)
+                #resgata correta sequencia de classes
+                imgs_classes.append(desc[2].split(os.sep)[-2])
 
         if save_load:
             # will save the extracted data
             save_features(descriptors_list)
 
-    return descriptors_list
+    return descriptors_list, imgs_classes
 
 def save_features(feat):
 

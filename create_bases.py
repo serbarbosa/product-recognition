@@ -4,7 +4,7 @@
     course: scc0251
     year/semester: 2020/1
 '''
-import os, shutil
+import os, shutil, sys
 import random
 import numpy as np
 
@@ -27,7 +27,7 @@ base_folder = os.path.join(script_dir, "base")
 products_dirs = os.listdir(base_folder)
 random.shuffle(products_dirs)
 # iterating through image directories
-for product_dir in products_dirs:
+for product_dir in products_dirs[:int(sys.argv[1])]:
     # retrieving all product images
     images = os.listdir(os.path.join(base_folder, product_dir))
     random.shuffle(images)
