@@ -22,6 +22,7 @@ def validate_model(test_imgs_path, img_feats_hist, numb_of_features, kmeans_mode
     hit, miss = 0, 0
 
     imgs_paths = []
+    true_classes = []
     for product_path in tests_paths:
 
         product_imgs = os.listdir(os.path.join(test_imgs_path, product_path))
@@ -30,9 +31,9 @@ def validate_model(test_imgs_path, img_feats_hist, numb_of_features, kmeans_mode
         for img_path in product_imgs[:3]:
 
             imgs_paths.append(os.path.join(test_imgs_path, product_path, img_path))
-
+            true_classes.append(product_path)
     # processing everything in parallel
-    results = Parallel(n_jobs=-1)(delayed(img_recognizer.recognize)(
+    predictions = Parallel(n_jobs=-1)(delayed(img_recognizer.recognize)(
                                 os.path.join(img_path, product_path, img_path),
                                 img_feats_hist,
                                 numb_of_features,
@@ -41,15 +42,16 @@ def validate_model(test_imgs_path, img_feats_hist, numb_of_features, kmeans_mode
                                 for img_path in imgs_paths
                                 )
 
-    for res in results:
-        if res == "SUCCESS":
-            hit += 1
-        elif res == "FAILURE":
-            miss += 1
+    _evaluate_results(true_classes, predictions)
+    #for res in results:
+    #    if res == "SUCCESS":
+    #        hit += 1
+    #    elif res == "FAILURE":
+    #        miss += 1
 
-    print("correctly recognized: " + str(hit) )
-    print("not recognized: " + str(miss) )
-    print("correctness: " + str(hit*100/(hit+miss)) + "%")
+    #print("correctly recognized: " + str(hit) )
+    #print("not recognized: " + str(miss) )
+    #print("correctness: " + str(hit*100/(hit+miss)) + "%")
 
 
 def validate_model_v2(test_imgs_path, numb_of_features):
@@ -105,16 +107,16 @@ def validate_model_v2(test_imgs_path, numb_of_features):
 
     #print ("true_class ="  + str(true_classes))
     #print ("prediction ="  + str(predictions))
+    _evaluate_results(true_classes, predictions)
+
+
+def _evaluate_results(true_classes, predictions):
 
 
     accuracy = accuracy_score(true_classes, predictions)
     print ("accuracy = ", accuracy)
     cm = confusion_matrix(true_classes, predictions)
-    print (cm)
 
-    showconfusionmatrix(cm)
-
-def showconfusionmatrix(cm):
     pl.matshow(cm)
     pl.title('Confusion matrix')
     pl.colorbar()

@@ -1,8 +1,0 @@
-3 ou mais imagens de treino
-random forest 500 estimators
-cerca de 300 classes de produtos
-2000 features
-500 clusters
-
-
-acuracia: 

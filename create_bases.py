@@ -32,20 +32,22 @@ for product_dir in products_dirs[:int(sys.argv[1])]:
     images = os.listdir(os.path.join(base_folder, product_dir))
     random.shuffle(images)
     # products with less than 3 images are not considered
-    if len(images) > 3:
+    if len(images) > 8: # ---> troca aqui
         # 3 to 5 images chosen for training base
         # the others will be used for testing
         train = []
         test = []
-        if len(images) > 6: # 5 images
-            train += images[:5]
-            test += images[5:]
-        elif len(images) == 6: # 4 images
-            train += images[:4]
-            test += images[4:]
-        else:
-            train += images[:3]
-            test += images[3:]
+        train += images[:7]
+        test += images[7:]
+        #if len(images) > 5: # 5 images
+        #    train += images[:5]
+        #    test += images[5:]
+        #elif len(images) == 6: # 4 images
+        #    train += images[:4]
+        #    test += images[4:]
+        #else:
+        #    train += images[:3]
+        #    test += images[3:]
         #copying images to their respective folders
         #train
         os.mkdir(os.path.join(train_dir, product_dir))

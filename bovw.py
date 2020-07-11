@@ -19,12 +19,12 @@ train_imgs_path = os.path.join(os.getcwd(), "train")
 test_imgs_path = os.path.join(os.getcwd(), "test")
 
 numb_of_features = 2000 #350
-n_dic = 500 #200
+n_dic = 320 #200
 random_state = 1
 
 print("processing training images")
 # obtaining features -> format is (features, amnt_of_features_extracted, image_path)
-features_list, train_classes = features_extractor.extract_features(train_imgs_path, numb_of_features, save_load=True, overwrite=True)
+features_list, train_classes = features_extractor.extract_features(train_imgs_path, numb_of_features, save_load=True, overwrite=False)
 
 print("creating dictionary of visual words")
 # creating visual words dictionary and extracting histograms for each image

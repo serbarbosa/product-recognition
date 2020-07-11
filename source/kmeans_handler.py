@@ -18,10 +18,9 @@ import pickle
 def create_model_v2(descriptors_list, train_classes, n_dic, save_load=True, overwrite=True):
 
     if save_load and not overwrite:
-            # will check if there are files to load data from
-            if os.path.exists("bovw.pkl"):
-                return load_model_v2()
-
+        # will check if there are files to load data from
+        if os.path.exists("bovw.pkl"):
+            return
     descriptors = np.squeeze(np.array(descriptors_list)[:,[0]])
 
     bag = np.concatenate(tuple(descriptors[i] for i in range(len(descriptors))), axis=0).astype(np.float32)
@@ -46,24 +45,20 @@ def create_model_v2(descriptors_list, train_classes, n_dic, save_load=True, over
     im_features = stdScaler.transform(im_features)
 
     #train model using linear svm
-    #from sklearn.svm import LinearSVC
-    #print("performing Linear SVM")
-    #clf = LinearSVC(max_iter=20000)
-    #clf.fit(im_features, np.array(train_classes))
+    from sklearn.svm import LinearSVC
+    print("performing Linear SVM")
+    clf = LinearSVC(max_iter=3000)
+    clf.fit(im_features, np.array(train_classes))
 
     #train model using random forest algorithm
-    from sklearn.ensemble import RandomForestClassifier
-    print("performing random forest")
-    clf = RandomForestClassifier(n_estimators = 500, random_state=10)
+    #from sklearn.ensemble import RandomForestClassifier
+    #print("performing random forest")
+    #clf = RandomForestClassifier(n_estimators = 1300, random_state=10)
+    #clf.fit(im_features, np.array(train_classes))
 
 
-    clf.fit(im_features, np.array(train_classes)) #TODO create vector with product classes -> for validation as well
+    save_model_v2(clf, stdScaler, n_dic, voc)
 
-
-    if save_load:
-        save_model_v2(clf, stdScaler, n_dic, voc)
-
-    return clf, stdScaler, n_dic, voc
 
 
 def create_model(descriptors_list, n_dic, random_state, save_load=True, overwrite=True):
@@ -89,8 +84,12 @@ def create_model(descriptors_list, n_dic, random_state, save_load=True, overwrit
                             verbose=False,
                           init='random',
                           random_state=random_state,
-                          n_init=3
+                          n_init=3,
+                          n_jobs=-1
                           )
+    # TODO -> use scipy version.
+
+
 
     #fit the model
     kmeans_model.fit(bag)
@@ -122,5 +121,5 @@ def save_model(img_feats_hist, kmeans_model):
 def load_model():
    return pickle.load(open("dictionary.pkl", "rb")), pickle.load(open("kmeans_model.pkl", "rb"))
 
-def loat_model_v2():
+def load_model_v2():
     return joblib.load("bovw.pkl")

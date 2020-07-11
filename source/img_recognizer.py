@@ -1,9 +1,11 @@
-import os, shutil
+import os, shutil, sys
 import numpy as np
 import cv2
 from .features_extractor import _preprocess_and_extract
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
+from collections import Counter
+
 
 def recognize(query_img_path, img_feats_hist, numb_of_features, kmeans_model, n_dic):
     '''
@@ -37,20 +39,34 @@ def recognize(query_img_path, img_feats_hist, numb_of_features, kmeans_model, n_
         dist_ref.append(img_hist[1])
         dists.append(dist_ref)
 
+
     # find nearest img
-    nearest_path = min(dists, key = lambda x: x[0])
+    #nearest_path = min(dists, key = lambda x: x[0])
 
     #get product code
-    prod_code = nearest_path[1].split(os.sep)[-2]
+    #prod_code = nearest_path[1].split(os.sep)[-2]
 
     #get query product code
-    q_prod_code = query_img_path.split(os.sep)[-2]
+    #q_prod_code = query_img_path.split(os.sep)[-2]
 
     # returns True if the producs are the same
-    if prod_code == q_prod_code:
-        return 'SUCCESS'
-    else:
-        return 'FAILURE'
+    #if prod_code == q_prod_code:
+    #    return 'SUCCESS'
+    #else:
+    #    return 'FAILURE'
+
+    # New method - Find the 10 closest images. The most frequent product is the answer
+
+    dists.sort(key = lambda x: x[0])
+    nearest_products = []
+    for path in dists[:5]:
+        nearest_products.append(path[1].split(os.sep)[-2])
+
+    pred = Counter(nearest_products)
+    prod_code = pred.most_common(1)[0][0]
+
+    # return the class predicted
+    return prod_code
 
     #dists.sort(key = lambda x: x[0])
     #nearest_path = dists[:7]
@@ -84,4 +100,8 @@ def recognize(query_img_path, img_feats_hist, numb_of_features, kmeans_model, n_
     #plt.show()
 
 
+if __name__ == "__main__":
+
+    img_query = sys.argv[1]
+    pass
 

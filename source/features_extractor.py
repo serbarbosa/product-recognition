@@ -40,12 +40,10 @@ def extract_features(base_path, numb_of_features, save_load=True, overwrite=True
 
     descriptors_list = []
     imgs_classes = []
-    run = True
     if save_load and not overwrite:
         # will see if there is a file with the features to load from
         if os.path.exists("features.pkl"):
-            descriptors_list = load_features()
-            run = False
+            return load_features()
 
     if overwrite or run:
 
@@ -71,18 +69,20 @@ def extract_features(base_path, numb_of_features, save_load=True, overwrite=True
 
         if save_load:
             # will save the extracted data
-            save_features(descriptors_list)
+            save_features(descriptors_list, imgs_classes)
 
     return descriptors_list, imgs_classes
 
-def save_features(feat):
+def save_features(feat, imgs_classes):
 
     pickle.dump(feat, open("features.pkl", "wb"))
+    pickle.dump(imgs_classes, open("trained_classes.pkl", "wb"))
 
 def load_features():
 
     feat = pickle.load(open("features.pkl", "rb"))
-    return feat
+    imgs_classes = pickle.load(open("trained_classes.pkl", "rb"))
+    return feat, imgs_classes
 
 
 
