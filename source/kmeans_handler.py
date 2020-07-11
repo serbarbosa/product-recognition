@@ -15,7 +15,7 @@ from joblib import Parallel, delayed
 import joblib
 import pickle
 
-def create_model_v2(descriptors_list, train_classes, n_dic, save_load=True, overwrite=True):
+def create_model_v2(descriptors_list, train_classes, n_dic, save_load=True, overwrite=True, algorithm="randomforest", param=1500):
 
     if save_load and not overwrite:
         # will check if there are files to load data from
@@ -44,20 +44,22 @@ def create_model_v2(descriptors_list, train_classes, n_dic, save_load=True, over
     stdScaler = StandardScaler().fit(im_features)
     im_features = stdScaler.transform(im_features)
 
-    #train model using linear svm
-    from sklearn.svm import LinearSVC
-    print("performing Linear SVM")
-    clf = LinearSVC(max_iter=3000)
-    clf.fit(im_features, np.array(train_classes))
+    if algorithm != "randomforest":
+        #train model using linear svm
+        from sklearn.svm import LinearSVC
+        print("performing Linear SVM")
+        clf = LinearSVC(max_iter=param)
+        clf.fit(im_features, np.array(train_classes))
+        save_model_v2(clf, stdScaler, n_dic, voc)
 
-    #train model using random forest algorithm
-    #from sklearn.ensemble import RandomForestClassifier
-    #print("performing random forest")
-    #clf = RandomForestClassifier(n_estimators = 1300, random_state=10)
-    #clf.fit(im_features, np.array(train_classes))
+    else:
+        #train model using random forest algorithm
+        from sklearn.ensemble import RandomForestClassifier
+        print("performing random forest")
+        clf = RandomForestClassifier(n_estimators = param, random_state=10)
+        clf.fit(im_features, np.array(train_classes))
 
-
-    save_model_v2(clf, stdScaler, n_dic, voc)
+        save_model_v2(clf, stdScaler, n_dic, voc)
 
 
 

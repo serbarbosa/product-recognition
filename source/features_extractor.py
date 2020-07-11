@@ -20,7 +20,8 @@ It'll also allow to save and load the features extracted.
 def _preprocess_and_extract(img_path, numb_of_features):
 
     orb = cv2.ORB_create(numb_of_features)
-    prep_img = preprocess_img(cv2.imread(img_path))
+    prep_img = preprocess_img(cv2.imread(img_path))    #No fim, preprocessar so ajuda se for sem randomforest
+    prep_img = cv2.imread(img_path)
     key_point, descriptor = orb.detectAndCompute(prep_img, None)
 
     # no relevant points found
