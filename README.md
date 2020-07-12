@@ -20,7 +20,7 @@ Each image contains a close up of a single product in a specific orientation. Th
 
 ### Steps
 ---------
-As a first attempt to achieve the goal is going to be used a computer vision approach for feature descriptions extraction.  
+In order to achieve the goal a computer vision approach for feature descriptions extraction was used.  
 Before extracting the features a preprocessing step is performed to improve the contrast in the image. For this step, a clahe filter is applied.
 <p float="left">
   <img src="source/partial_examples/original.jpg" width='250'>
@@ -36,16 +36,21 @@ To perform the feature extraction step the ORB algorithm was chosen as it has pr
   <img src="source/partial_examples/out_orb.jpg" width='250'>
   <img src="source/partial_examples/out_prep_orb.jpg" width='250'>
 </p>  
-For the next steps, it will be necessary to decide which ML or computer vision method to use to retrieve the product name for a given input image.
-It has to be taken into account that the different rotations and scales in the images can be hard to deal with so changes may be needed in the approach used so far.
 </br>
-
-### First Results
+The bag of features technique was used for the recognition of the products. Tests were made using both the classic model and models combined with ML approaches.
+So, after the features were extracted, a k-means clustering was applyed to give the dictionary of visual words. With that in hands, a histogram of visual words(descriptors) was obtained for each image in the training base.
+ADD SAMPLE IMAGE
+Three different methods were used to recognize products:
+    bla
+### Results
 ---------
 A Brute Force method was used to compare the different images of the product and match the 30 most similar features. Notice that the greater the transformation of the image, the greater the number of wrong matches.
 <p float="left">
-  <img src="source/partial_examples/1_and_2.jpg" width='600'>
-  <img src="source/partial_examples/3_and_4.jpg" width='600'>
-  <img src="source/partial_examples/5_and_6.jpg" width='600'>
-  <img src="source/partial_examples/3_and_7.jpg" width='600'>
+  <img src="source/partial_examples/1_and_2.jpg" width='400'>
+  <img src="source/partial_examples/3_and_4.jpg" width='400'>
+  <img src="source/partial_examples/5_and_6.jpg" width='400'>
+  <img src="source/partial_examples/3_and_7.jpg" width='400'>
 </p>
+</br> 
+
+
