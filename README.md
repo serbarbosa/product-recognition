@@ -41,11 +41,11 @@ The bag of features technique was used for the recognition of the products. Test
 So, after the features were extracted, a k-means clustering was applyed to give the dictionary of visual words. With that in hands, a normalized histogram of visual words(descriptors) was obtained for each image in the training base.
 ADD SAMPLE IMAGE
 Three different methods were used to recognize products:
-<li>
-- Computing the histogram for the query image and retrieving the product with most similar(closest) histogram as result.
-- Using Random Forest method trained with the images descriptors histograms to create a model for classification.
-- Same as above, but using Linear SVM method.
-</li>
+<ul>
+<li>Computing the histogram for the query image and retrieving the product with most similar(closest) histogram as result.</li>
+<li>Using Random Forest method trained with the images descriptors histograms to create a model for classification.</li>
+<li>Same as above, but using Linear SVM method.</li>
+</ul>
 </br>
 
 ### Results
@@ -59,22 +59,34 @@ In an attempt to test the response of features obtained with ORB after the objec
 </p>
 </br> 
 For the purpose of understanding the results of this implementation, it is necessary to make the definitions below:
-- A **True positive** is when a product is correctly recognized
-- A **True negative** is when an unknown product(not present in the training base) is correctly appointed by the program as unknown
-- A **False positive** is when the program mistakenly recognizes the product
-- A **False negative** is when the query product is appointed to be unknown while the program was actually trained to recognize it
+<ul>
+  <li>A <strong>True positive</strong> is when a product is correctly recognized</li>
+<li>A <strong>True negative</strong> is when an unknown product(not present in the training base) is correctly appointed by the program as unknown</li>
+  <li>A <strong>False positive</strong> is when the program mistakenly recognizes the product</li>
+<li>A <strong>False negative</strong> is when the query product is appointed to be unknown while the program was actually trained to recognize it</li>
+</ul>
 </br>
 
 For these first results, the train and test bases were created so that the test base only had images of products that appeared in the training base(different pictures of same products). In other words, the only possible results were **True positives** or **False positives**.
 The measurements of **recall** were taken for each one of the three methods. The values would go up a little for smaller training bases(less number of different products) but overall, as seen below, were very low.
-TABLE OF RESULT1
+<p float="left">
+  <img src="validacoes/teste3.png" width='230'>
+  <img src="validacoes/teste4.png" width='210'>
+  <img src="validacoes/teste5.png" width='180'>
+</p>
 
 For the second round of tests, a percentage of unknown products was added to the test base. The ML methods were not tested nor here nor in the next round of tests( as it was desired to feed the products detected as unknown back to the model, the ML methods used would require a new training every time a product was indicated as unknown). In order to encounter unknown products, a distance threshold was defined to determine when the histogram of the images retrieved was too far from the queries histogram. The results are shown below. Note that the accuracy decreases quickly after using a higher threshold and the recall increases slightly, which means that the model is poorly recognizing the products.
-IMAGE THRES 0.4     IMAGE THRES 0.5
+<p float="left">
+  <img src="validacoes/teste9.png" width='450'>
+  <img src="validacoes/teste10.png" width='450'>
+</p>
 
 For the last round of tests was considered a training base with only 1 product and a large test base with many products (all unknown). Every time an unknown product was detected by the program, the computed query image visual words histogram was inserted in the base. After 3 images of an unknown product were inserted (or until the product be identified for the first time) it was considered (when validating) that the model was prepared to recognize it. A small simulation is available here. Below are the results for 2 large tests using threshold 0.048 and 0.043. These results are also very low, but, as a matter of comparison, the results obtained by Gryfo while using CNN for tests similar to this one were close to 50% of precision and 10% of recall.  
 
-
+<p float="left">
+  <img src="validacoes/teste12.png" width='450'>
+  <img src="validacoes/teste13.png" width='450'>
+</p>
 </br>
 
 ### Discussion and Conclusion
