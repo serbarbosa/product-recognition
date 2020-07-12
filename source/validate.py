@@ -16,7 +16,7 @@ from joblib import Parallel, delayed
 import pylab as pl
 import joblib
 
-def validate_model(test_imgs_path, train_imgs_path, img_feats_hist, numb_of_features, kmeans_model, n_dic, new_classes=None):
+def validate_model(test_imgs_path, train_imgs_path, img_feats_hist, numb_of_features, kmeans_model, n_dic, new_classes=None, threshold=0.05):
     tests_paths = os.listdir(test_imgs_path)
 
 
@@ -61,7 +61,8 @@ def validate_model(test_imgs_path, train_imgs_path, img_feats_hist, numb_of_feat
                                 img_feats_hist,
                                 numb_of_features,
                                 kmeans_model,
-                                n_dic)
+                                n_dic,
+                                threshold=threshold)
                                 for img_path in imgs_paths
                                 )
     for i in range(len(true_classes)):
@@ -101,7 +102,7 @@ def validate_model(test_imgs_path, train_imgs_path, img_feats_hist, numb_of_feat
     print("precision: %f" % precision)
     print("recall: %f" % recall)
     print("F1 Score: %f" % f1)
-    _evaluate_results(true_classes, preds_results)
+    #_evaluate_results(true_classes, preds_results)
 
 
 def validate_model_v2(test_imgs_path, train_imgs_path, numb_of_features):

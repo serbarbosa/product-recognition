@@ -20,13 +20,14 @@ test_imgs_path = os.path.join(scritp_dir, 'test')
 extra_test_path = os.path.join(scritp_dir, 'test_extra')
 
 
-# First we create a small train base and a test base
+# First we create a small train base(only 1 product) and a test base
 # with only unknown products
-create_bases.create(1, test_entropy=1, test_size = 2000) # test_size is the numb of test images
+# create_bases.create(1, test_entropy=1, test_size = 30) # test_size is the numb of test images
 
 # Then we define the parameters for the bag of words
 numb_of_features = 3000
 n_dic = 150
+threshold = 0.043
 
 # Creating the dictionary of visual words and computing the descriptors histogram
 # for each image
@@ -52,7 +53,7 @@ classes_learned = {}
 for i in range(len(test_imgs)):
     if os.path.exists(test_imgs_paths[i]):
         prediction = img_recognizer.recognize_or_get_histogram(test_imgs_paths[i], dictionary,
-                                                               numb_of_features, kmeans_model, n_dic, threshold=0.043)
+                                                               numb_of_features, kmeans_model, n_dic, threshold=threshold)
         product_name = test_imgs_paths[i].split(os.sep)[-2]
         # Checking if the model has found a valid answer
         if prediction[1] == "out":
@@ -87,11 +88,12 @@ for k, v in classes_learned.items():
         classes_added += 1
 
 print()
-print("threshold: 0.043")
+print("threshold: %f"%threshold)
 print("%d novos produtos foram aprendidos." % classes_added)
 
 # At the end, we can validate the resulting dictionary
-validate.validate_model(extra_test_path, train_imgs_path, dictionary, numb_of_features, kmeans_model, n_dic, new_classes=classes_learned)
+validate.validate_model(extra_test_path, train_imgs_path, dictionary, numb_of_features, kmeans_model, n_dic, new_classes=classes_learned, threshold=threshold)
+
 
 
 
