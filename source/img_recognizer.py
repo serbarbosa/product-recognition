@@ -170,8 +170,8 @@ def recognize_or_get_histogram(query_img_path, img_feats_hist, numb_of_features,
     if prod_guess[0] > threshold:
         # the program evalutes that the image is not in the base
         # and that the prediction was wrong
-        return prod_code, "out", [query_img_hist, query_img_path]
+        return prod_code, "out", [query_img_hist, query_img_path], [prod_guess[0], prod_guess[1]]
     else:
         # the program evalutes that the prediction is correct
-        return prod_code, "in"
+        return prod_code, "in",  [query_img_hist, query_img_path], [prod_guess[0], prod_guess[1]]
 
