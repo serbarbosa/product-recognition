@@ -13,7 +13,7 @@ from scipy.cluster.vq import kmeans, vq
 from joblib import Parallel, delayed
 from source import *
 
-def perform_bovw(numb_of_features, n_dic, random_state=1, algorithm="auto", alg_param=1300):
+def perform_bovw(numb_of_features, n_dic, random_state=1, algorithm="auto", alg_param=1300, validate=False):
     '''
         This method will allows to perform bag of features in 3 different ways.
 
@@ -50,11 +50,12 @@ def perform_bovw(numb_of_features, n_dic, random_state=1, algorithm="auto", alg_
     else:
         img_feats_hist, kmeans_model = kmeans_handler.create_model(features_list, n_dic, random_state, save_load=True, overwrite=True)
 
-    print("validating model")
-    if algorithm == "auto":
-        validate.validate_model(test_imgs_path, train_imgs_path, img_feats_hist, numb_of_features, kmeans_model, n_dic)
-    else:
-        validate.validate_model_v2(test_imgs_path, numb_of_features)    #deprecated
+    if validate:
+        print("validating model")
+        if algorithm == "auto":
+            validate.validate_model(test_imgs_path, train_imgs_path, img_feats_hist, numb_of_features, kmeans_model, n_dic)
+        else:
+            validate.validate_model_v2(test_imgs_path, numb_of_features)    #deprecated
 
 # recognizing image from test set
 # tests_paths = []

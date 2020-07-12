@@ -16,8 +16,9 @@ from joblib import Parallel, delayed
 import pylab as pl
 from sklearn.externals import joblib
 
-def validate_model(test_imgs_path, train_imgs_path, img_feats_hist, numb_of_features, kmeans_model, n_dic):
+def validate_model(test_imgs_path, train_imgs_path, img_feats_hist, numb_of_features, kmeans_model, n_dic, new_classes=None):
     tests_paths = os.listdir(test_imgs_path)
+
 
     true_pos = 0
     false_pos = 0
@@ -32,6 +33,13 @@ def validate_model(test_imgs_path, train_imgs_path, img_feats_hist, numb_of_feat
     for prod_class in os.listdir(train_imgs_path):
         classes_in_train[prod_class] = 0
     classes_in_train = os.listdir(train_imgs_path)
+
+    # if 'new_classes' is not None, we need to add those classes to the known ones
+    if new_classes is not None:
+        for prod, occurrences in new_classes.items():
+            if occurrences > 2: # then the class is supposed to be learned
+                classes_in_train.append(prod)
+
 
     for product_path in tests_paths:
 
@@ -56,7 +64,6 @@ def validate_model(test_imgs_path, train_imgs_path, img_feats_hist, numb_of_feat
                                 n_dic)
                                 for img_path in imgs_paths
                                 )
-
     for i in range(len(true_classes)):
 
         # unknown product
@@ -82,10 +89,13 @@ def validate_model(test_imgs_path, train_imgs_path, img_feats_hist, numb_of_feat
         else:
             preds_results.append(val[0])
 
-
-    precision = true_pos/(true_pos + false_pos)
-    recall = true_pos/(true_pos + false_neg)
-    f1 = 2*(precision*recall)/(precision + recall)
+    precision, recall, f1 = 0,0,0
+    if(true_pos + false_pos) > 0:
+        precision = true_pos/(true_pos + false_pos) # in this real world problem, has to be one
+    if(true_pos + false_neg) > 0:
+        recall = true_pos/(true_pos + false_neg)    # for this applicatian, measures its efficiency
+    if(precision + recall) > 0:
+        f1 = 2*(precision*recall)/(precision + recall)
 
     print("true_positives: %d    true_negatives: %d     false_pos: %d    false_neg: %d" % (true_pos, true_neg, false_pos, false_neg))
     print("precision: %f" % precision)

@@ -1,3 +1,10 @@
+ '''
+      author: Sergio Ricardo Gomes Barbosa Filho
+      nusp:   10408386
+      course: scc0251
+      year/semester: 2020/1
+ '''
+
 import os, shutil, sys
 import numpy as np
 import cv2
@@ -7,7 +14,7 @@ import matplotlib.pyplot as plt
 from collections import Counter
 
 
-def recognize(query_img_path, img_feats_hist, numb_of_features, kmeans_model, n_dic):
+def recognize(query_img_path, img_feats_hist, numb_of_features, kmeans_model, n_dic, threshold=0.04):
     '''
         Process and recognizes the product in the image
 
@@ -45,8 +52,7 @@ def recognize(query_img_path, img_feats_hist, numb_of_features, kmeans_model, n_
     prod_guess = min(dists, key = lambda x: x[0])
     prod_code= prod_guess[1].split(os.sep)[-2]
     # evaluates if the distance to the closest image is really close enough
-    threshold = 0.065
-    if prod_guess[0] > 0.065:
+    if prod_guess[0] > threshold:
         # the program evalutes that the image is not in the base
         # and that the prediction was wrong
         return prod_code, "out"
@@ -62,7 +68,7 @@ def recognize_dist(query_img_path, img_feats_hist, numb_of_features, kmeans_mode
     # extracting img data to compare
     query_img_feats = _preprocess_and_extract(query_img_path, numb_of_features)
     if query_img_feats[1] == 0: # no features were found
-        return 'ERROR'
+        return 'ERROR', 'out'
 
     y = kmeans_model.predict(query_img_feats[0].astype(np.float32))
     query_img_hist, _ = np.histogram(y, bins=range(n_dic+1), density=True)
@@ -129,4 +135,43 @@ def recognize_dist(query_img_path, img_feats_hist, numb_of_features, kmeans_mode
     # returns the closest product and its distance to the query img
     return prod_code, nearest_path[0]
 
+def recognize_or_get_histogram(query_img_path, img_feats_hist, numb_of_features, kmeans_model, n_dic, threshold=0.055):
+    '''
+        In this method, if the model decides the product is unknown
+        the features histogram is returned to retrofeed the model
+
+        return: tuple - class_predicted, "in" or "out" of train model, [query_histogram, query_path]
+    '''
+
+    # extracting img data to compare
+    query_img_feats = _preprocess_and_extract(query_img_path, numb_of_features)
+    if query_img_feats[1] == 0: # no features were found
+        return 'ERROR', 'error'
+
+    y = kmeans_model.predict(query_img_feats[0].astype(np.float32))
+    query_img_hist, _ = np.histogram(y, bins=range(n_dic+1), density=True)
+
+    # computes dist to every possible image descriptor histogram
+    dists = []
+
+    for img_hist in img_feats_hist:
+        dist_ref = []
+        # computes distance
+        dist_ref.append(np.sqrt(np.sum((img_hist[0]-query_img_hist)**2)))
+        # passes along the path reference of the image
+        dist_ref.append(img_hist[1])
+        dists.append(dist_ref)
+
+
+    # finds the nearest image and extracst the product code
+    prod_guess = min(dists, key = lambda x: x[0])
+    prod_code= prod_guess[1].split(os.sep)[-2]
+    # evaluates if the distance to the closest image is really close enough
+    if prod_guess[0] > threshold:
+        # the program evalutes that the image is not in the base
+        # and that the prediction was wrong
+        return prod_code, "out", [query_img_hist, query_img_path]
+    else:
+        # the program evalutes that the prediction is correct
+        return prod_code, "in"
 

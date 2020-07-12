@@ -10,6 +10,7 @@ from source import kmeans_handler, img_recognizer, validate
 import create_bases
 import random
 
+# Code to create train/test bases, process and validate the models
 
 scritp_dir = os.getcwd()
 test_imgs_path = os.path.join(scritp_dir, 'test')
@@ -19,28 +20,32 @@ train_imgs_path = os.path.join(scritp_dir, 'train')
 numb_of_features = 1000
 n_dic = 130
 
-# creating trainig and testing bases
-create_bases.create(600, test_entropy=0.15)
+# creating trainig and testing bases -> test base with 15%  unknown products
+#create_bases.create(300, test_entropy=0.15)
 
 # buiding model
-bovw.perform_bovw(numb_of_features, n_dic)
+#bovw.perform_bovw(numb_of_features, n_dic)
 
 # loading model for testing
 dictionary, kmeans_model = kmeans_handler.load_model()
 validate.validate_model(test_imgs_path, train_imgs_path, dictionary, numb_of_features, kmeans_model, n_dic)
 
-products_in_train = os.listdir(train_imgs_path)
 
+
+
+# the code below is used for testing recognition of products handpicked from the test base
+
+# products_in_train = os.listdir(train_imgs_path)
 # choosing query images - retriving some randomly from the test base
-products_paths = []
-products = os.listdir(test_imgs_path)
-random.shuffle(products)
-for prod in products[:1]:
-    # will enter the products folder and choose an image randomly
-    imgs = os.listdir(os.path.join(test_imgs_path, prod))
-    random.shuffle(imgs)
-    products_paths.append(os.path.join(test_imgs_path, prod, imgs[0]))
-
+#products_paths = []
+#products = os.listdir(test_imgs_path)
+#random.shuffle(products)
+#for prod in products[:1]:
+#    # will enter the products folder and choose an image randomly
+#    imgs = os.listdir(os.path.join(test_imgs_path, prod))
+#    random.shuffle(imgs)
+#    products_paths.append(os.path.join(test_imgs_path, prod, imgs[0]))
+#
 # make predictions
 #for test_path in products_paths:
 #    test_prod = test_path.split(os.sep)[-2]
@@ -52,9 +57,9 @@ for prod in products[:1]:
 #
 #    print("dist = " + str(pred[1][0]))
 #    if(pred[0] == test_prod):
-#        print("yes")
+#        print("success")
 #    else:
-#        print("no")
+#        print("failure")
 
 
 
