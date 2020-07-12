@@ -1,0 +1,11 @@
+
+
+
+    histogram distance
+    5 training images
+    202 product classes
+    2000 features
+    200 kmeans clusters 
+    recall: 0.1632
+
+

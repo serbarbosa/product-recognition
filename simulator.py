@@ -52,7 +52,7 @@ classes_learned = {}
 for i in range(len(test_imgs)):
     if os.path.exists(test_imgs_paths[i]):
         prediction = img_recognizer.recognize_or_get_histogram(test_imgs_paths[i], dictionary,
-                                                               numb_of_features, kmeans_model, n_dic, threshold=0.04)
+                                                               numb_of_features, kmeans_model, n_dic, threshold=0.043)
         product_name = test_imgs_paths[i].split(os.sep)[-2]
         # Checking if the model has found a valid answer
         if prediction[1] == "out":
@@ -85,7 +85,10 @@ classes_added = 0
 for k, v in classes_learned.items():
     if v > 2:
         classes_added += 1
-print("\n%d novos produtos foram aprendidos." % classes_added)
+
+print()
+print("threshold: 0.043")
+print("%d novos produtos foram aprendidos." % classes_added)
 
 # At the end, we can validate the resulting dictionary
 validate.validate_model(extra_test_path, train_imgs_path, dictionary, numb_of_features, kmeans_model, n_dic, new_classes=classes_learned)

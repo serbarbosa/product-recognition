@@ -28,8 +28,10 @@ n_dic = 130
 
 # loading model for testing
 dictionary, kmeans_model = kmeans_handler.load_model()
+print("")
+print("threshold: 0.053")
 validate.validate_model(test_imgs_path, train_imgs_path, dictionary, numb_of_features, kmeans_model, n_dic)
-
+print("")
 
 
 

@@ -14,7 +14,7 @@ from . import features_extractor
 import random
 from joblib import Parallel, delayed
 import pylab as pl
-from sklearn.externals import joblib
+import joblib
 
 def validate_model(test_imgs_path, train_imgs_path, img_feats_hist, numb_of_features, kmeans_model, n_dic, new_classes=None):
     tests_paths = os.listdir(test_imgs_path)

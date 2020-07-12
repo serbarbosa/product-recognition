@@ -1,0 +1,7 @@
+training base of 222 produtos and 5 img each
+unknown products: 15%
+threshold: 0.053
+precision: 0.419753
+recall  : 0.144989
+F1 Score: 0.215531
+accuracy: 0.2000

@@ -1,9 +1,9 @@
- '''
-      author: Sergio Ricardo Gomes Barbosa Filho
-      nusp:   10408386
-      course: scc0251
-      year/semester: 2020/1
- '''
+'''
+  author: Sergio Ricardo Gomes Barbosa Filho
+  nusp:   10408386
+  course: scc0251
+  year/semester: 2020/1
+'''
 
 import os, shutil, sys
 import numpy as np
@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from collections import Counter
 
 
-def recognize(query_img_path, img_feats_hist, numb_of_features, kmeans_model, n_dic, threshold=0.04):
+def recognize(query_img_path, img_feats_hist, numb_of_features, kmeans_model, n_dic, threshold=0.043):
     '''
         Process and recognizes the product in the image
 

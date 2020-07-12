@@ -1,0 +1,15 @@
+
+
+
+
+    5 training images
+    202 product classes
+    3000 features
+    370 kmeans clusters
+    random forest 1300 estimators 
+    recall: 0.18623
+
+    sem prep.: 0.2093
+
+
+
