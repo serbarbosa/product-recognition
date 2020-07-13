@@ -2,6 +2,8 @@
 Author: Sérgio Ricardo G. B. Filho  
 NUSP: 10408386
 
+Presentation video: https://www.youtube.com/watch?v=lRLC2vdnqQU
+
 ### Project Goal
 ---------
 The goal of this project is to recognize supermarket products in images or, more specifically, every product of a supermarket as individual products in images of the checkout conveyor belt. The model created will be able to generate representations for new products(not present in the training base) in order to recognize them. The idea is that after an unknown product appears a labeled representation is stored and when this product appears for the fourth time the program will be able to recognize it using only the three previous representations.  
